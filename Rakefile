@@ -5,7 +5,7 @@ require 'bundler/gem_tasks'
 VIDEO_JS_RAILS_HOME = File.expand_path(File.dirname(__FILE__))
 VIDEO_JS_HOME = File.expand_path('../video.js', VIDEO_JS_RAILS_HOME)
 
-VIDEO_JS_RAKE_USAGE = "Usage: rake videojs:update TAG=v4.12.5"
+VIDEO_JS_RAKE_USAGE = "Usage: rake videojs:update TAG=v5.0.0-rc.39"
 
 namespace :videojs do
   task :update => [:build, :commit]
@@ -18,16 +18,18 @@ namespace :videojs do
         sh "git checkout -q master"
         sh "git pull -q"
         sh "git checkout -q #{tag}"
+        sh "npm prune && npm install"
         sh "grunt"
       end
 
       # Copy files into our Rails structure
       puts
       puts "* Copying files to vendor/assets"
-      sh "cp #{VIDEO_JS_HOME}/dist/video-js/font/* #{VIDEO_JS_RAILS_HOME}/vendor/assets/fonts/"
-      sh "cp #{VIDEO_JS_HOME}/dist/video-js/video-js.css #{VIDEO_JS_RAILS_HOME}/vendor/assets/stylesheets/"
-      sh "cp #{VIDEO_JS_HOME}/dist/video-js/video-js.swf #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/"
-      sh "cp #{VIDEO_JS_HOME}/dist/video-js/video.dev.js #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/"
+      sh "cp #{VIDEO_JS_HOME}/dist/font/* #{VIDEO_JS_RAILS_HOME}/vendor/assets/fonts/"
+      sh "cp #{VIDEO_JS_HOME}/dist/video-js.css #{VIDEO_JS_RAILS_HOME}/vendor/assets/stylesheets/"
+      sh "cp #{VIDEO_JS_HOME}/dist/video-js.swf #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/"
+      sh "cp #{VIDEO_JS_HOME}/dist/video.js #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/video.dev.js"
+      sh "cp #{VIDEO_JS_HOME}/dist/ie8/videojs-ie8.js #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/"
 
       # Now, perform some asset_path and other substitutions
       puts
@@ -37,7 +39,7 @@ namespace :videojs do
         File.foreach(css) do |line|
           # Handle fonts => url('<%= asset_path('vjs.woff') %>') format('woff')
           out <<
-            line.gsub(/url\(('*)font\/(vjs[^\)]+)\)(\s+format[^\)]+\))?/, 'url(<%= asset_path(\1\2) %>)\3')
+            line.gsub(/url\(('*)font\/(VideoJS[^\)]+)\)(\s+format[^\)]+\))?/, 'url(<%= asset_path(\1\2) %>)\3')
         end
       end
       sh "rm -f #{css}"
