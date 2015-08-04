@@ -27,7 +27,7 @@ namespace :videojs do
       puts "* Copying files to vendor/assets"
       sh "cp #{VIDEO_JS_HOME}/dist/font/* #{VIDEO_JS_RAILS_HOME}/vendor/assets/fonts/"
       sh "cp #{VIDEO_JS_HOME}/dist/video-js.css #{VIDEO_JS_RAILS_HOME}/vendor/assets/stylesheets/"
-      sh "cp #{VIDEO_JS_HOME}/dist/video-js.swf #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/"
+      sh "cp #{VIDEO_JS_HOME}/dist/video-js.swf #{VIDEO_JS_RAILS_HOME}/vendor/assets/flash/"
       sh "cp #{VIDEO_JS_HOME}/dist/video.js #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/video.dev.js"
       sh "cp #{VIDEO_JS_HOME}/dist/ie8/videojs-ie8.js #{VIDEO_JS_RAILS_HOME}/vendor/assets/javascripts/"
 
